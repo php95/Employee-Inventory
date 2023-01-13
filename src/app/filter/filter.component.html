@@ -1,0 +1,44 @@
+<mat-drawer-container class="container" autosize>
+    <mat-drawer [(opened)]="toggleSideNav" #drawer class="sidenav" mode="side">
+        <div class="text-center">
+            <h1>
+                Filters
+            </h1>
+            <hr>
+        </div>
+        <form #filterForm = "ngForm"  (ngSubmit)="filterEmployees(filterForm.value)">
+            <ng-container *ngFor="let filter of filters">
+                <!--dropdown-->
+                <mat-form-field class="field-width" *ngIf="filter.type === 'dropdown'" appearance="fill">
+                    <mat-label>{{filter.title}}</mat-label>
+                    <mat-select [name]="filter?.title?.toLowerCase() ?? ''" ngModel>
+                        <mat-option *ngFor="let country of countries" [value]="country.name">
+                            {{country.name.toUpperCase()}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <!--input-->
+                <mat-form-field *ngIf="filter.type === 'text'" class="field-width">
+                    <mat-label> {{filter.title}}</mat-label>
+                    <input [name]="filter?.title?.toLowerCase() ?? ''" matInput ngModel>
+                </mat-form-field>
+                <!--datepicker-->
+                <mat-form-field class="field-width" *ngIf="filter.type === 'date'" appearance="fill">
+                    <mat-label>{{filter.title}}</mat-label>
+                    <input [name]="filter?.title?.toLowerCase() ?? ''" matInput [matDatepicker]="picker" ngModel>
+                    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+            </ng-container>
+            <div class="text-center">
+                <button type="submit" mat-raised-button extended color="primary">
+                    <mat-icon>filter_list</mat-icon>
+                    Filter
+                </button>
+            </div>
+        </form>
+    </mat-drawer>
+    <div class="ms-1">
+        <ng-content></ng-content>
+    </div>
+</mat-drawer-container>
