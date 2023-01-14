@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, of, Subject } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { FilterData } from '../models/filterModel';
 
 @Injectable({
@@ -23,13 +23,13 @@ export class FilterService {
     {
       title: 'country',
       type: 'dropdown',
-      api: 'https://my-json-server.typicode.com/php95/countries-api/page1?_limit=12',
+      api: 'https://restcountries.com/v2/all?fields=name',
       multiple: false,
     },
     {
-      title: 'country2',
+      title: 'country',
       type: 'dropdown',
-      api: 'https://my-json-server.typicode.com/php95/countries-api/page2?_limit=12',
+      api: 'https://restcountries.com/v2/all?fields=name',
       multiple: false,
     },
     {
@@ -37,31 +37,29 @@ export class FilterService {
       type: 'date',
     },
   ];
-  paginationNext =new Subject<{title?:string,next?:string}>();
-  dropdownUrls:{title:string,url?:string}[] = [];
-  constructor(private http: HttpClient) {
-  }
+  dropdownUrls:string[] = [];
+  constructor(private http: HttpClient) {}
 
   getFilters(): Observable<FilterData[]> {
-    this.getDropdownUrls();
     return of(this.filterData);
   }
 
   getDropdownUrls() {
-      this.filterData.forEach((item) => {
+    this.getFilters().subscribe((res: FilterData[]) => {
+      res.forEach((item) => {
         if (item.type === 'dropdown') {
-          this.dropdownUrls.push({title:item.title,url:item.api});
+          this.dropdownUrls.push(item.api as string);
         } 
       });
       return this.dropdownUrls;
+    });
   }
 
-  getDropdownData(url: string | undefined):Observable <{dataList:[],next:""}> {
+  getDropdownData(url: string | undefined = this.filterData[2].api):Observable <unknown> {
     if (url) {
-     return this.http.get(url) as Observable <{dataList:[],next:""}>;
+     return this.http.get(url);
     }
-    return of();
+    return of([]);
   }
 
-  
 }

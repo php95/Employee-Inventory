@@ -17,10 +17,9 @@ import { HttpClientModule } from '@angular/common/http';
 import { SearchPipe } from './employee/pipes/search.pipe';
 import { FormsModule } from '@angular/forms';
 import { SortPipe } from './employee/pipes/sort.pipe';
-import { PaginateDirective } from './filter/directives/paginate.directive';
 
 @NgModule({
-  declarations: [AppComponent, EmployeeComponent, FilterComponent, SortPipe, PaginateDirective],
+  declarations: [AppComponent, EmployeeComponent, FilterComponent, SortPipe],
   imports: [
     BrowserModule,
     AppRoutingModule,
