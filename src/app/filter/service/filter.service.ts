@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable, of, Subject } from 'rxjs';
 import { FilterData } from '../models/filterModel';
 
 @Injectable({
@@ -37,8 +37,10 @@ export class FilterService {
       type: 'date',
     },
   ];
+  paginationNext =new Subject<{title?:string,next?:string}>();
   dropdownUrls:{title:string,url?:string}[] = [];
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+  }
 
   getFilters(): Observable<FilterData[]> {
     this.getDropdownUrls();
@@ -54,10 +56,12 @@ export class FilterService {
       return this.dropdownUrls;
   }
 
-  getDropdownData(url: string | undefined = this.filterData[2].api):Observable <object> {
+  getDropdownData(url: string | undefined):Observable <{dataList:[],next:""}> {
     if (url) {
-     return this.http.get(url);
+     return this.http.get(url) as Observable <{dataList:[],next:""}>;
     }
-    return of([]);
+    return of();
   }
+
+  
 }

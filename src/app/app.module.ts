@@ -10,7 +10,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import {MatDatepickerModule} from '@angular/material/datepicker';
-import {MatSelectInfiniteScrollModule} from 'ng-mat-select-infinite-scroll';
 import {MatNativeDateModule} from '@angular/material/core';
 import {MatButtonModule} from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon'
@@ -18,9 +17,10 @@ import { HttpClientModule } from '@angular/common/http';
 import { SearchPipe } from './employee/pipes/search.pipe';
 import { FormsModule } from '@angular/forms';
 import { SortPipe } from './employee/pipes/sort.pipe';
+import { PaginateDirective } from './filter/directives/paginate.directive';
 
 @NgModule({
-  declarations: [AppComponent, EmployeeComponent, FilterComponent, SortPipe],
+  declarations: [AppComponent, EmployeeComponent, FilterComponent, SortPipe, PaginateDirective],
   imports: [
     BrowserModule,
     AppRoutingModule,
