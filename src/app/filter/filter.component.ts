@@ -13,6 +13,30 @@ export class FilterComponent implements OnInit{
   }
   ngOnInit(): void {
     this.getDropdownUrls();
+    this.filterService.paginationNext.subscribe((paginate)=>{
+
+      if(paginate){
+        this.filterService.getDropdownData(paginate.next).subscribe((result)=>{
+          console.log("get dropdown data");
+          if(this.dropdowns[paginate.title??''] && this.dropdowns[paginate.title??''].dataList.length){
+            (this.dropdowns[paginate.title??''].dataList as []).push(...result.dataList);
+            if(!result.next){
+              this.dropdowns[paginate.title??''].next=null;
+            }
+          }
+        else{
+          this.dropdowns[paginate.title??'']={
+            dataList:result.dataList as [],
+            next:result.next?result.next:null
+          } 
+        }
+        
+         console.log("dropdowns:",this.dropdowns)
+         });
+
+      }
+
+    });
   }
   @Input() toggleSideNav:boolean =false; 
   showFiller = false;
@@ -28,10 +52,9 @@ export class FilterComponent implements OnInit{
         this.filterService.getDropdownData(dropdownData.url).subscribe((result)=>{
  
         this.dropdowns[dropdownData.title]={
-          dataList:result as []
-        }
-         console.log(result);
-         
+          dataList:result.dataList as [],
+          next:result.next?result.next:null
+        }         
          console.log("dropdowns:",this.dropdowns)
          });
 
