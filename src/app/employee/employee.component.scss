@@ -1,0 +1,22 @@
+table {
+  width: 100%;
+}
+
+.sort-col {
+  display: flex;
+  padding: 1rem;
+}
+
+.clickable{
+  cursor: pointer;
+}
+
+.header-structure{
+  display: flex;
+  justify-content: space-between;
+}
+
+.table-container{
+width: 100%;
+overflow-x: auto;
+}

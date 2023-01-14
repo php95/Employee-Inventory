@@ -1,0 +1,61 @@
+<app-filter [toggleSideNav]="isOpened">
+  <!--header-->
+  <header class="header-structure">
+    <ng-container>
+      <h5>Employees</h5>
+    </ng-container>
+    <div>
+      <mat-form-field>
+        <span matPrefix> </span>
+        <input type="text" matInput placeholder="Search" name="search" #searchBar>
+        <button matSuffix mat-button (click)="search(searchBar.value)"><mat-icon>search</mat-icon></button>
+      </mat-form-field>
+      <mat-icon (click)="toggleFilter()" class="clickable">toc</mat-icon>
+    </div>
+  </header>
+  <br />
+
+  <!--Table-->
+  <section class="table-container">
+    <table mat-table [dataSource]="searchedEmployees" class="mat-elevation-z8">
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef> id </th>
+        <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+      </ng-container>
+
+      <!-- Name Column -->
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef class="sort-col"> Name
+          <mat-icon class="clickable" (click)="sort('name','string')" *ngIf="isNameAscending">unfold_more</mat-icon>
+          <mat-icon class="clickable" (click)="sort('name','string')" *ngIf="!isNameAscending">unfold_less</mat-icon>
+        </th>
+        <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+      </ng-container>
+
+      <!-- Weight Column -->
+      <ng-container matColumnDef="email">
+        <th mat-header-cell *matHeaderCellDef> email </th>
+        <td mat-cell *matCellDef="let element"> {{element.email}} </td>
+      </ng-container>
+
+      <!-- Symbol Column -->
+      <ng-container matColumnDef="date">
+        <th mat-header-cell *matHeaderCellDef> date </th>
+        <td mat-cell *matCellDef="let element"> {{element.date}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="salary">
+        <th mat-header-cell *matHeaderCellDef class="sort-col">
+          salary
+          <mat-icon class="clickable" (click)="sort('salary','number')" *ngIf="isSalaryAscending">unfold_more</mat-icon>
+          <mat-icon class="clickable" (click)="sort('salary','number')"
+            *ngIf="!isSalaryAscending">unfold_less</mat-icon>
+        </th>
+        <td mat-cell *matCellDef="let element"> {{element.salary}} </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </section>
+</app-filter>
