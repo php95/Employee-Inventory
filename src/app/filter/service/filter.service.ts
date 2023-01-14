@@ -23,13 +23,13 @@ export class FilterService {
     {
       title: 'country',
       type: 'dropdown',
-      api: 'https://restcountries.com/v2/all?fields=name',
+      api: 'https://my-json-server.typicode.com/php95/countries-api/page1?_limit=12',
       multiple: false,
     },
     {
-      title: 'country',
+      title: 'country2',
       type: 'dropdown',
-      api: 'https://restcountries.com/v2/all?fields=name',
+      api: 'https://my-json-server.typicode.com/php95/countries-api/page2?_limit=12',
       multiple: false,
     },
     {
@@ -37,25 +37,24 @@ export class FilterService {
       type: 'date',
     },
   ];
-  dropdownUrls:string[] = [];
+  dropdownUrls:{title:string,url?:string}[] = [];
   constructor(private http: HttpClient) {}
 
   getFilters(): Observable<FilterData[]> {
+    this.getDropdownUrls();
     return of(this.filterData);
   }
 
   getDropdownUrls() {
-    this.getFilters().subscribe((res: FilterData[]) => {
-      res.forEach((item) => {
+      this.filterData.forEach((item) => {
         if (item.type === 'dropdown') {
-          this.dropdownUrls.push(item.api as string);
+          this.dropdownUrls.push({title:item.title,url:item.api});
         } 
       });
       return this.dropdownUrls;
-    });
   }
 
-  getDropdownData(url: string | undefined = this.filterData[2].api):Observable <unknown> {
+  getDropdownData(url: string | undefined = this.filterData[2].api):Observable <object> {
     if (url) {
      return this.http.get(url);
     }

@@ -11,9 +11,9 @@
                 <!--dropdown-->
                 <mat-form-field class="field-width" *ngIf="filter.type === 'dropdown'" appearance="fill">
                     <mat-label>{{filter.title}}</mat-label>
-                    <mat-select [name]="filter?.title?.toLowerCase() ?? ''" ngModel>
-                        <mat-option *ngFor="let country of countries" [value]="country.name">
-                            {{country.name.toUpperCase()}}
+                    <mat-select  [name]="filter?.title?.toLowerCase() ?? ''" ngModel  onscroll="loadmore($event)">
+                        <mat-option *ngFor="let item of dropdowns[filter.title].dataList" [value]="item.code">
+                            {{item.name.toUpperCase()}}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>

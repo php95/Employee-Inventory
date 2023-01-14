@@ -1,5 +1,5 @@
-export class FilterData {
-    title?: string;
+export interface FilterData {
+    title: string;
     type?: string;
     api?: string ;
     multible?: boolean

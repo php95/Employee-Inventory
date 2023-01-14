@@ -2,10 +2,6 @@ import { Component, Input, OnInit} from '@angular/core';
 import { FilterData } from './models/filterModel';
 import { FilterService } from './service/filter.service';
 
-interface Country {
-  name: string;
-}
-
 @Component({
   selector: 'app-filter',
   templateUrl: './filter.component.html',
@@ -21,35 +17,37 @@ export class FilterComponent implements OnInit{
   @Input() toggleSideNav:boolean =false; 
   showFiller = false;
   dropdownUrls:string[] = [];
-  countries:Country[] = [{name:'ehtipia'},{name:'egypt'},{name:'germany'}];
+  dropdowns:any={};
   filters:FilterData[] = []
 
   getDropdownUrls() {
     this.filterService.getFilters().subscribe((res: FilterData[]) => {
       this.filters = res;
-      console.log(this.filters)
-      // res.forEach((item) => {
-      //   if (item.type === 'dropdown') {
-      //     this.dropdownUrls.push(item.api as string);
-        //  this.filterService.getDropdownData(item.api).subscribe((result)=>{
-          //  (result as []).map((item)=>{
-          //    console.log({item});
-             
-          //  });
+      this.filterService.dropdownUrls.forEach((dropdownData)=>{
 
-         // this.countries = result as [];
-          // console.log(result);
-          
-          // console.log("countries:",this.countries)
-          //})
-      //  } 
-      //});
-    //  return this.dropdownUrls;
+        this.filterService.getDropdownData(dropdownData.url).subscribe((result)=>{
+ 
+        this.dropdowns[dropdownData.title]={
+          dataList:result as []
+        }
+         console.log(result);
+         
+         console.log("dropdowns:",this.dropdowns)
+         });
+
+      });
     });
   }
   filterEmployees(data:unknown){
     console.log(data);
     
 
+  }
+  loadmore = (event:any) => {
+    console.log(event)
+    var target = event.target
+    if ( target.scrollTop + target.offsetHeight === target.scrollHeight) {
+      console.log("load")
+    }
   }
 }

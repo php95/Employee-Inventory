@@ -10,7 +10,7 @@ export class EmployeeService {
   constructor(private http: HttpClient) {}
 
   getEmployees() {
-    const url = 'https://hub.dummyapis.com/employee';
+    const url = 'https://my-json-server.typicode.com/php95/employees-data/employees';
     return this.http.get(url).pipe(
       map((res: any) => {
         if (res && res.length > 0) {
