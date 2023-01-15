@@ -33,17 +33,21 @@ export class FilterComponent implements OnInit {
 
   }
   /**
-   * @function ngOnInit 
-   * initialize the dynamic filter form 
-   * get filters from api and fill dropdowns with dynamic data 
-   * check for query strings to initialze the form with.
-   * @returns {void}
-   */
+ * @function ngOnInit 
+ * initialize the dynamic filter form 
+ * get filters from api and fill dropdowns with dynamic data 
+ * check for query strings to initialze the form with.
+ * @returns {void}
+ */
   ngOnInit(): void {
     this.getDropdownUrls();
     this.getFiltersFromQueryParam();
+    this.paginateDropdown();
+
+  }
+
+  paginateDropdown() {
     this.filterService.paginationNext.subscribe((paginate) => {
-      // aubscribe on the dropdown scroll panel change to update it with the data.
       if (paginate) {
         this.filterService.getDropdownData(paginate.next).subscribe((result) => {
           if (this.dropdowns[paginate.title ?? ''] && this.dropdowns[paginate.title ?? ''].dataList.length) {
@@ -88,7 +92,7 @@ export class FilterComponent implements OnInit {
       });
     });
   }
-  /**
+    /**
    * @function getFiltersFromQueryParam
    * check url for query params 
    * @returns {void}
@@ -101,7 +105,7 @@ export class FilterComponent implements OnInit {
       );
 
   }
-  /**
+    /**
    * @function stringifyDate
    * @param data any
    * search for data of type date
