@@ -32,6 +32,7 @@ export class EmployeeService {
       employee.email = element.email;
       employee.date = element.dob;
       employee.salary = element.salary;
+      employee.country=element.country;
       return employee;
     }
     return;

@@ -12,7 +12,7 @@ import { DateService } from '../services/date.service';
   styleUrls: ['./employee.component.scss'],
 })
 export class EmployeeComponent implements OnInit {
-  displayedColumns: string[] = ['id', 'name', 'email', 'date', 'salary'];
+  displayedColumns: string[] = ['id', 'name', 'email', 'date','country', 'salary'];
   dataSource: EmployeeData[] = [];
   searchedEmployees: EmployeeData[] = [];
   isSalaryAscending: boolean = true;
@@ -62,7 +62,9 @@ export class EmployeeComponent implements OnInit {
       let colDataKey =Object.keys(colData)[0];
       let colDataValue =Object.values(colData)[0];      
       this.searchedEmployees.forEach((employee)=>{
-        if(Object.keys(employee).includes(colDataKey) ){
+       let searchKey= Object.keys(employee).find((key)=>key===colDataKey)
+        if(searchKey){
+          if(searchKey==='date'){
           let dateValue1= this.dateService.getDateMsecValue(this.dateService.formatDate(employee['date']));
           let dateValue2= this.dateService.getDateMsecValue(this.dateService.formatDate(colDataValue));
           if(dateValue1 && dateValue2)
@@ -73,6 +75,13 @@ export class EmployeeComponent implements OnInit {
             }
 
           }
+      }
+      else if(searchKey==='country'){
+        if(employee.country?.code===colDataValue){
+          filteredData.push(employee);
+        }
+
+      }
        else if (Object.values(employee).includes(colDataValue)){
           filteredData.push(employee);
         }

@@ -5,4 +5,8 @@ export class EmployeeData {
     email?: string; 
     date?: Date; 
     salary?: number ;
+    country?:{
+      name:string,
+      code:string
+    };
   }
