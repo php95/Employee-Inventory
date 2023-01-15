@@ -3,13 +3,23 @@ import { Pipe, PipeTransform } from '@angular/core';
 @Pipe({
   name: 'sort',
 })
+
 export class SortPipe implements PipeTransform {
+  /**
+   * @function transform
+   * sort data depend on it's type string or number and it's sortype ascending and descinding 
+   * @param value 
+   * @param sortColumn 
+   * @param type 
+   * @param sortType 
+   * @returns {Array<any>}
+   */
   transform(
     value: Array<any>,
     sortColumn: string,
     type: string,
     sortType: string
-  ) {
+  ):Array<any> {
     if (sortColumn == '') return value;
 
     if (type === 'number') {

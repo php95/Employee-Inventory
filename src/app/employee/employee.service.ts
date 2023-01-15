@@ -12,7 +12,7 @@ export class EmployeeService {
 
   private filterSubject = new Subject<any>();
 
-
+  //get employees api and map the data with employee model data
   getEmployees() {
     const url = employeeApiUrl;
     return this.http.get(url).pipe(
@@ -25,6 +25,7 @@ export class EmployeeService {
     );
   }
 
+  // map single employee data 
   mapSingleEmployee(element: any): EmployeeData | undefined {
     const employee: EmployeeData = new EmployeeData();
     if (element) {
@@ -39,6 +40,7 @@ export class EmployeeService {
     return;
   }
 
+  // map all employees
   mapEmployees(employeeData: any): EmployeeData[] {
     let employees: EmployeeData[] = [];
     if (employeeData) {
@@ -50,14 +52,11 @@ export class EmployeeService {
     return [];
   }
 
+  // send filtered data through subject
   sendFilter(data: object) {
     this.filterSubject.next({...data});
   }
-
-  clearFilter() {
-    this.filterSubject.next('');
-  }
-
+// get filtered data from subject
   getFilter(): Observable<any> {
     return this.filterSubject.asObservable();
   }

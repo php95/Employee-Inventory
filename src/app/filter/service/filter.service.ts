@@ -13,10 +13,13 @@ export class FilterService {
   constructor(private http: HttpClient) {
   }
 
+  // get filtered data api
   getFilters(): Observable<FilterData[]> {
     return this.http.get(filterFormApiUrl) as Observable<FilterData[]>;
   }
 
+  //get all dropdown api urls from filtered data
+  
   getDropdownUrls(filters:FilterData[]) {
       filters.forEach((item) => {
         if (item.type === 'dropdown') {
@@ -25,6 +28,10 @@ export class FilterService {
       });
       return this.dropdownUrls;
   }
+
+
+
+  // get dropdown data from the api
 
   getDropdownData(url: string | undefined):Observable <{dataList:[],next:""}> {
     if (url) {
