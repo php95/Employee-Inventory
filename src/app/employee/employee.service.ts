@@ -1,16 +1,20 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { map, of } from 'rxjs';
+import { map, Observable, of, Subject } from 'rxjs';
 import { EmployeeData } from './models/empModel';
+import { employeeApiUrl } from '../core/apiDefines';
 
 @Injectable({
   providedIn: 'root',
 })
 export class EmployeeService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
+
+  private filterSubject = new Subject<any>();
+
 
   getEmployees() {
-    const url = 'https://my-json-server.typicode.com/php95/employees-data/employees';
+    const url = employeeApiUrl;
     return this.http.get(url).pipe(
       map((res: any) => {
         if (res && res.length > 0) {
@@ -29,12 +33,13 @@ export class EmployeeService {
       employee.email = element.email;
       employee.date = element.dob;
       employee.salary = element.salary;
+      employee.country=element.country;
       return employee;
     }
     return;
   }
 
-  mapEmployees(employeeData: any):EmployeeData[] {
+  mapEmployees(employeeData: any): EmployeeData[] {
     let employees: EmployeeData[] = [];
     if (employeeData) {
       employeeData.map((element: any) => {
@@ -43,5 +48,17 @@ export class EmployeeService {
     }
     if (employees) return employees;
     return [];
+  }
+
+  sendFilter(data: object) {
+    this.filterSubject.next({...data});
+  }
+
+  clearFilter() {
+    this.filterSubject.next('');
+  }
+
+  getFilter(): Observable<any> {
+    return this.filterSubject.asObservable();
   }
 }

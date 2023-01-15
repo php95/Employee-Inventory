@@ -11,7 +11,7 @@
                 <!--dropdown-->
                 <mat-form-field class="field-width" *ngIf="filter.type === 'dropdown'" appearance="fill">
                     <mat-label>{{filter.title}}</mat-label>
-                    <mat-select  [paginate]="{title:filter.title?filter.title:'',next:dropdowns[filter.title?filter.title:'']?.next?? ''}" [name]="filter?.title?.toLowerCase() ?? ''" ngModel>
+                    <mat-select  [paginate]="{title:filter.title?filter.title:'',next:dropdowns[filter.title?filter.title:'']?.next?? ''}" [name]="filter?.title?.toLowerCase() ?? ''"  [ngModel] ="filteredParams ? filteredParams[filter.title.toLowerCase()]:''">
                         <mat-option *ngFor="let item of dropdowns[filter.title?filter.title:'']?.dataList" [value]="item.code">
                             {{item.name.toUpperCase()}}
                         </mat-option>
@@ -20,14 +20,14 @@
                 <!--input-->
                 <mat-form-field *ngIf="filter.type === 'text'" class="field-width">
                     <mat-label> {{filter.title}}</mat-label>
-                    <input [name]="filter?.title?.toLowerCase() ?? ''" matInput ngModel>
+                    <input [name]="filter?.title?.toLowerCase() ?? ''" matInput [ngModel] ="filteredParams ? filteredParams[filter.title.toLowerCase()]:''">
                 </mat-form-field>
                 <!--datepicker-->
                 <mat-form-field class="field-width" *ngIf="filter.type === 'date'" appearance="fill">
                     <mat-label>{{filter.title}}</mat-label>
-                    <input [name]="filter?.title?.toLowerCase() ?? ''" matInput [matDatepicker]="picker" ngModel>
+                    <input [name]="filter?.title?.toLowerCase() ?? ''" matInput [matDatepicker]="picker" [ngModel] ="filteredParams ? filteredParams[filter.title.toLowerCase()]:''">
                     <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-                    <mat-datepicker #picker></mat-datepicker>
+                    <mat-datepicker  [startAt]="filteredParams[filter.title.toLowerCase()]"  #picker></mat-datepicker>
                 </mat-form-field>
             </ng-container>
             <div class="text-center">

@@ -4,6 +4,7 @@ import { EmployeeData } from './models/empModel';
 import { SearchPipe } from './pipes/search.pipe';
 import { SortPipe } from './pipes/sort.pipe';
 import { MatTable } from '@angular/material/table';
+import { DateService } from '../core/services/date.service';
 
 @Component({
   selector: 'app-employee',
@@ -11,22 +12,83 @@ import { MatTable } from '@angular/material/table';
   styleUrls: ['./employee.component.scss'],
 })
 export class EmployeeComponent implements OnInit {
-  displayedColumns: string[] = ['id', 'name', 'email', 'date', 'salary'];
+  displayedColumns: string[] = ['id', 'name', 'email', 'date','country', 'salary'];
   dataSource: EmployeeData[] = [];
   searchedEmployees: EmployeeData[] = [];
   isSalaryAscending: boolean = true;
   isNameAscending: boolean = true;
   @ViewChild(MatTable) table: MatTable<any> | undefined;
-  isOpened: boolean =false;
+  isOpened: boolean = false;
+  empColsData: string[] = [];
 
   constructor(
     private employeeService: EmployeeService,
     private searchPipe: SearchPipe,
-    private sortPipe: SortPipe
-  ) {}
+    private sortPipe: SortPipe,
+    private dateService: DateService
+  ) { }
 
   ngOnInit(): void {
     this.setAllEmployees();
+  }
+
+  setEmpsCols(empData: EmployeeData[]): void {
+    let oneEmpData = empData[0];
+    for (let emp in oneEmpData) {
+      this.empColsData.push(emp);
+    }
+  }
+
+  getIntersetionCols(empDataCols: any, filterData: any) {
+    let intersectionCols: any[] = [];
+    empDataCols.forEach((empCol: any) => {
+      for (let filterCol in filterData) {
+        if (empCol === filterCol) {
+          let filterObj:any={};
+          if (filterData[filterCol]) {            
+            filterObj[filterCol] = filterData[filterCol]
+            intersectionCols.push(filterObj)
+          }
+        }
+      }
+    });
+    return intersectionCols;
+  }
+
+  getIntersectionData(intersectionCols: object[],employees:EmployeeData[]) :any[] {
+    let filteredData :any = []
+    console.log(intersectionCols);
+    intersectionCols.forEach((colData)=>{
+      let colDataKey =Object.keys(colData)[0];
+      let colDataValue =Object.values(colData)[0];  
+      employees.forEach((employee)=>{
+       let searchKey= Object.keys(employee).find((key)=>key===colDataKey)
+        if(searchKey){
+          if(searchKey==='date'){
+          let dateValue1= this.dateService.getDateMsecValue(this.dateService.formatDate(employee['date']));
+          let dateValue2= this.dateService.getDateMsecValue(this.dateService.formatDate(colDataValue));
+          if(dateValue1 && dateValue2)
+          {
+            if(dateValue1===dateValue2){
+
+              filteredData.push(employee);
+            }
+
+          }
+      }
+      else if(searchKey==='country'){
+        if(employee.country?.code===colDataValue){
+          filteredData.push(employee);
+        }
+
+      }
+       else if (Object.values(employee).includes(colDataValue)){
+          filteredData.push(employee);
+        }
+      }
+      })
+    })
+    return filteredData;
   }
 
   setAllEmployees(): void {
@@ -35,6 +97,8 @@ export class EmployeeComponent implements OnInit {
         if (employees) {
           this.dataSource = employees as EmployeeData[];
           this.searchedEmployees = this.dataSource;
+          this.setEmpsCols(this.searchedEmployees);
+          this.filterData();
         }
       },
       (error: any) => {
@@ -49,12 +113,12 @@ export class EmployeeComponent implements OnInit {
 
   sort(sortCol: string, type: string) {
     if (sortCol === 'salary') {
-      this.isSalaryAscending ?  this.searchedEmployees = this.sortPipe.transform(
+      this.isSalaryAscending ? this.searchedEmployees = this.sortPipe.transform(
         this.searchedEmployees,
         sortCol,
         type,
         'asc'
-      ): this.searchedEmployees = this.sortPipe.transform(
+      ) : this.searchedEmployees = this.sortPipe.transform(
         this.searchedEmployees,
         sortCol,
         type,
@@ -63,12 +127,12 @@ export class EmployeeComponent implements OnInit {
       this.isSalaryAscending = !this.isSalaryAscending;
     }
     else if (sortCol === 'name') {
-      this.isNameAscending ?  this.searchedEmployees = this.sortPipe.transform(
+      this.isNameAscending ? this.searchedEmployees = this.sortPipe.transform(
         this.searchedEmployees,
         sortCol,
         type,
         'asc'
-      ): this.searchedEmployees = this.sortPipe.transform(
+      ) : this.searchedEmployees = this.sortPipe.transform(
         this.searchedEmployees,
         sortCol,
         type,
@@ -78,7 +142,21 @@ export class EmployeeComponent implements OnInit {
     }
     this.table?.renderRows(); // i should update the ui of the table by this way in method material
   }
-  toggleFilter(){
-    this.isOpened = ! this.isOpened;
+  toggleFilter() {
+    this.isOpened = !this.isOpened;
+  }
+  filterData() {
+    this.searchedEmployees=this.dataSource;
+    this.employeeService.getFilter().subscribe((res) => {
+      let intesrsectedCols = this.getIntersetionCols(this.empColsData, res);
+      let filteredData = this.getIntersectionData(intesrsectedCols,this.dataSource);
+      let uniqueData = new Set(filteredData);
+      if(filteredData.length === 0 ){
+        this.searchedEmployees = this.dataSource;
+      }
+      else {
+        this.searchedEmployees = Array.from(uniqueData);
+      }
+    })
   }
 }

@@ -21,7 +21,6 @@ export class PaginateDirective {
   
   loadAllOnScroll(event:any) {
     if(event.target.scrollTop===event.target.scrollTopMax){
-      console.log(this.paginate);
       if(this.paginate.next){
         this.filterService.paginationNext.next(this.paginate);
       }
