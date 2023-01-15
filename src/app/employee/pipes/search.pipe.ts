@@ -4,7 +4,14 @@ import { Pipe, PipeTransform } from '@angular/core';
   name: 'search',
 })
 export class SearchPipe implements PipeTransform {
-  transform(value: Array<any>, filterString: any) {
+  /**
+   * @function transform
+   * filter the array based on search string
+   * @param value 
+   * @param filterString 
+   * @returns {Array<any>}
+   */
+  transform(value: Array<any>, filterString: any):Array<any> {
     if (value.length === 0 || filterString === '') {
       return value;
     }

@@ -7,18 +7,33 @@ import {FilterService} from '../service/filter.service'
 })
 
 export class PaginateDirective {
-
-  @Input() paginate:{title?:string,next?:string}={}
+  /**
+   * input holds the input data needed for pagination
+   */
+  @Input() paginate:{title?:string,next?:string}={};
+    /**
+     * @constructor
+     * @param select MatSelect
+     * @param filterService FilterService
+     */
     constructor(private select:MatSelect,public filterService: FilterService) {
 
        this.select.openedChange.subscribe((event) =>{if(event){ this.registerPanelScrollEvent()}});
    }
-   
+   /**
+    * @function registerPanelScrollEvent
+    * access element panel 
+    * add event listener to scroll event on panel
+    */
    registerPanelScrollEvent() {
     const panel = this.select.panel.nativeElement;
     panel.addEventListener('scroll', (event:any) => this.loadAllOnScroll(event));
   }
-  
+  /**
+   * @function loadAllOnScroll
+   * detect when scroller reaches last element to fire the pagination calls 
+   * @param event 
+   */
   loadAllOnScroll(event:any) {
     if(event.target.scrollTop===event.target.scrollTopMax){
       if(this.paginate.next){
