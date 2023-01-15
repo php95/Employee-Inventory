@@ -4,8 +4,14 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class DateService {
-
+/** @constructor */
   constructor() { }
+  /**
+   * @function formatDate
+   * check for data validity and format date to 'yyyy-mm-dd'
+   * @param date any
+   * @returns {string}
+   */
   formatDate(date:any) : string{
     let msec = Date.parse(date);
       
@@ -19,6 +25,13 @@ export class DateService {
     }
     return date;
   }
+
+  /**
+   * @function getDateMsecValue
+   * returns date equivilient misec value
+   * @param date any
+   * @returns {number} 
+   */
   getDateMsecValue(date:any){
     let msec = Date.parse(date);
     if(!Number.isNaN(msec)){
