@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of, Subject } from 'rxjs';
 import { FilterData } from '../models/filterModel';
+import { filterFormApiUrl } from '../../core/apiDefines';
 
 @Injectable({
   providedIn: 'root',
@@ -13,7 +14,7 @@ export class FilterService {
   }
 
   getFilters(): Observable<FilterData[]> {
-    return this.http.get('https://my-json-server.typicode.com/php95/dynamic-filteration-form/filters') as Observable<FilterData[]>;
+    return this.http.get(filterFormApiUrl) as Observable<FilterData[]>;
   }
 
   getDropdownUrls(filters:FilterData[]) {

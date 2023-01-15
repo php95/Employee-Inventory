@@ -1,0 +1,2 @@
+export const employeeApiUrl="https://my-json-server.typicode.com/php95/employees-data/employees";
+export const filterFormApiUrl="https://my-json-server.typicode.com/php95/dynamic-filteration-form/filters";

@@ -3,7 +3,7 @@ import { FilterData } from './models/filterModel';
 import { FilterService } from './service/filter.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { EmployeeService } from '../employee/employee.service';
-import { DateService } from '../services/date.service';
+import { DateService } from '../core/services/date.service';
 
 @Component({
   selector: 'app-filter',

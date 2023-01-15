@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map, Observable, of, Subject } from 'rxjs';
 import { EmployeeData } from './models/empModel';
+import { employeeApiUrl } from '../core/apiDefines';
 
 @Injectable({
   providedIn: 'root',
@@ -13,7 +14,7 @@ export class EmployeeService {
 
 
   getEmployees() {
-    const url = 'https://my-json-server.typicode.com/php95/employees-data/employees';
+    const url = employeeApiUrl;
     return this.http.get(url).pipe(
       map((res: any) => {
         if (res && res.length > 0) {

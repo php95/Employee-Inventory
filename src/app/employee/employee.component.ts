@@ -4,7 +4,7 @@ import { EmployeeData } from './models/empModel';
 import { SearchPipe } from './pipes/search.pipe';
 import { SortPipe } from './pipes/sort.pipe';
 import { MatTable } from '@angular/material/table';
-import { DateService } from '../services/date.service';
+import { DateService } from '../core/services/date.service';
 
 @Component({
   selector: 'app-employee',
