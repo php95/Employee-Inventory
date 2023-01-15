@@ -53,6 +53,7 @@ export class FilterComponent implements OnInit{
   getDropdownUrls() {
     this.filterService.getFilters().subscribe((res: FilterData[]) => {
       this.filters = res;
+      this.filterService.getDropdownUrls(this.filters);
       this.filterService.dropdownUrls.forEach((dropdownData)=>{
 
         this.filterService.getDropdownData(dropdownData.url).subscribe((result)=>{

@@ -7,48 +7,17 @@ import { FilterData } from '../models/filterModel';
   providedIn: 'root',
 })
 export class FilterService {
-  filterData = [
-    {
-      title: 'Email',
-      type: 'text',
-    },
-    {
-      title: 'Phone',
-      type: 'text',
-    },
-    {
-      title: 'Name',
-      type: 'text',
-    },
-    {
-      title: 'country',
-      type: 'dropdown',
-      api: 'https://my-json-server.typicode.com/php95/countries-api/page1?_limit=12',
-      multiple: false,
-    },
-    {
-      title: 'country2',
-      type: 'dropdown',
-      api: 'https://my-json-server.typicode.com/php95/countries-api/page2?_limit=12',
-      multiple: false,
-    },
-    {
-      title: 'Date',
-      type: 'date',
-    },
-  ];
   paginationNext =new Subject<{title?:string,next?:string}>();
   dropdownUrls:{title:string,url?:string}[] = [];
   constructor(private http: HttpClient) {
   }
 
   getFilters(): Observable<FilterData[]> {
-    this.getDropdownUrls();
-    return of(this.filterData);
+    return this.http.get('https://my-json-server.typicode.com/php95/dynamic-filteration-form/filters') as Observable<FilterData[]>;
   }
 
-  getDropdownUrls() {
-      this.filterData.forEach((item) => {
+  getDropdownUrls(filters:FilterData[]) {
+      filters.forEach((item) => {
         if (item.type === 'dropdown') {
           this.dropdownUrls.push({title:item.title,url:item.api});
         } 
