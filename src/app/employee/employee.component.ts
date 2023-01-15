@@ -30,7 +30,6 @@ export class EmployeeComponent implements OnInit {
 
   ngOnInit(): void {
     this.setAllEmployees();
-    this.filterData();
   }
 
   setEmpsCols(empData: EmployeeData[]): void {
@@ -56,12 +55,13 @@ export class EmployeeComponent implements OnInit {
     return intersectionCols;
   }
 
-  getIntersectionData(intersectionCols: object[]) :any[] {
+  getIntersectionData(intersectionCols: object[],employees:EmployeeData[]) :any[] {
     let filteredData :any = []
+    console.log(intersectionCols);
     intersectionCols.forEach((colData)=>{
       let colDataKey =Object.keys(colData)[0];
-      let colDataValue =Object.values(colData)[0];      
-      this.searchedEmployees.forEach((employee)=>{
+      let colDataValue =Object.values(colData)[0];  
+      employees.forEach((employee)=>{
        let searchKey= Object.keys(employee).find((key)=>key===colDataKey)
         if(searchKey){
           if(searchKey==='date'){
@@ -98,6 +98,7 @@ export class EmployeeComponent implements OnInit {
           this.dataSource = employees as EmployeeData[];
           this.searchedEmployees = this.dataSource;
           this.setEmpsCols(this.searchedEmployees);
+          this.filterData();
         }
       },
       (error: any) => {
@@ -145,9 +146,10 @@ export class EmployeeComponent implements OnInit {
     this.isOpened = !this.isOpened;
   }
   filterData() {
+    this.searchedEmployees=this.dataSource;
     this.employeeService.getFilter().subscribe((res) => {
       let intesrsectedCols = this.getIntersetionCols(this.empColsData, res);
-      let filteredData = this.getIntersectionData(intesrsectedCols);
+      let filteredData = this.getIntersectionData(intesrsectedCols,this.dataSource);
       let uniqueData = new Set(filteredData);
       if(filteredData.length === 0 ){
         this.searchedEmployees = this.dataSource;
