@@ -3,6 +3,7 @@ import { FilterData } from './models/filterModel';
 import { FilterService } from './service/filter.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { EmployeeService } from '../employee/employee.service';
+import { DateService } from '../services/date.service';
 
 @Component({
   selector: 'app-filter',
@@ -14,7 +15,8 @@ export class FilterComponent implements OnInit{
   constructor(private filterService: FilterService,
     private _route: ActivatedRoute,
     private _router: Router,
-    private employeeService: EmployeeService){
+    private employeeService: EmployeeService,
+    private dateService:DateService){
 
   }
   ngOnInit(): void {
@@ -24,7 +26,6 @@ export class FilterComponent implements OnInit{
 
       if(paginate){
         this.filterService.getDropdownData(paginate.next).subscribe((result)=>{
-          console.log("get dropdown data");
           if(this.dropdowns[paginate.title??''] && this.dropdowns[paginate.title??''].dataList.length){
             (this.dropdowns[paginate.title??''].dataList as []).push(...result.dataList);
             if(!result.next){
@@ -37,8 +38,6 @@ export class FilterComponent implements OnInit{
             next:result.next?result.next:null
           } 
         }
-        
-         console.log("dropdowns:",this.dropdowns)
          });
 
       }
@@ -62,7 +61,6 @@ export class FilterComponent implements OnInit{
           dataList:result.dataList as [],
           next:result.next?result.next:null
         }         
-         console.log("dropdowns:",this.dropdowns)
          });
 
       });
@@ -71,21 +69,25 @@ export class FilterComponent implements OnInit{
   getFiltersFromQueryParam(){
     this._route.queryParams
       .subscribe(params => {
-        this.filteredParams = params
+        this.filteredParams = params;
       }
     );
 
   }
   stringifyDate(data: any) {
     for (let item in data) {
-      data[item] = data[item] as unknown instanceof Date ? data[item].toString() : data[item];
+      let msec = Date.parse(data[item]);
+      if(!Number.isNaN(msec)){
+       data[item]=this.dateService.formatDate(data[item]);
+      }
     }
     return data;
   }
-  filterEmployees(data: object) {    
-    this.employeeService.sendFilter(data);
-    console.log({data})
+
+
+  filterEmployees(data: object) {   
     data = this.stringifyDate(data);
+    this.employeeService.sendFilter(data);
     var snapshot = this._route.snapshot;
     const params = { ...snapshot.queryParams };
     delete params['pos'];
@@ -98,10 +100,10 @@ export class FilterComponent implements OnInit{
     })
   }
   loadmore = (event:any) => {
-    console.log(event)
     var target = event.target
     if ( target.scrollTop + target.offsetHeight === target.scrollHeight) {
-      console.log("load")
     }
   }
+
+ 
 }

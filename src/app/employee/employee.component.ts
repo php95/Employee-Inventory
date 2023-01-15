@@ -4,6 +4,7 @@ import { EmployeeData } from './models/empModel';
 import { SearchPipe } from './pipes/search.pipe';
 import { SortPipe } from './pipes/sort.pipe';
 import { MatTable } from '@angular/material/table';
+import { DateService } from '../services/date.service';
 
 @Component({
   selector: 'app-employee',
@@ -23,7 +24,8 @@ export class EmployeeComponent implements OnInit {
   constructor(
     private employeeService: EmployeeService,
     private searchPipe: SearchPipe,
-    private sortPipe: SortPipe
+    private sortPipe: SortPipe,
+    private dateService: DateService
   ) { }
 
   ngOnInit(): void {
@@ -60,9 +62,21 @@ export class EmployeeComponent implements OnInit {
       let colDataKey =Object.keys(colData)[0];
       let colDataValue =Object.values(colData)[0];      
       this.searchedEmployees.forEach((employee)=>{
-        if(Object.keys(employee).includes(colDataKey) && Object.values(employee).includes(colDataValue)){
+        if(Object.keys(employee).includes(colDataKey) ){
+          let dateValue1= this.dateService.getDateMsecValue(this.dateService.formatDate(employee['date']));
+          let dateValue2= this.dateService.getDateMsecValue(this.dateService.formatDate(colDataValue));
+          if(dateValue1 && dateValue2)
+          {
+            if(dateValue1===dateValue2){
+
+              filteredData.push(employee);
+            }
+
+          }
+       else if (Object.values(employee).includes(colDataValue)){
           filteredData.push(employee);
         }
+      }
       })
     })
     return filteredData;
@@ -126,7 +140,6 @@ export class EmployeeComponent implements OnInit {
       let intesrsectedCols = this.getIntersetionCols(this.empColsData, res);
       let filteredData = this.getIntersectionData(intesrsectedCols);
       let uniqueData = new Set(filteredData);
-      console.log({uniqueData});
       if(filteredData.length === 0 ){
         this.searchedEmployees = this.dataSource;
       }
